@@ -1,11 +1,10 @@
 ################################################################################
 # General Variables from root module
 ################################################################################
-
-# variable "main-region" {
-#   type = string
-#   default = "us-west-2"
-# }
+variable "cluster_name" {
+  type    = string
+  default = "dominion-cluster"
+}
 
 ################################################################################
 # Variables from other Modules
@@ -28,4 +27,3 @@ variable "private_subnets" {
 variable "rolearn" {
   description = "Add admin role to the aws-auth configmap"
 }
-

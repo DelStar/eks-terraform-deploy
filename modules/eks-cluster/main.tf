@@ -6,8 +6,8 @@ module "eks" {
   source  = "terraform-aws-modules/eks/aws"
   version = "~> 19.0"
 
-  cluster_name    = "dominion-cluster"
-  cluster_version = "1.28"
+  cluster_name    = var.cluster_name
+  cluster_version = "1.27"
 
   cluster_endpoint_public_access = true
 
@@ -43,15 +43,15 @@ module "eks" {
   }
 
   eks_managed_node_groups = {
-    node-group-1 = {
+    node-group-01 = {
       min_size     = 1
       max_size     = 10
       desired_size = 2
     }
-    node-group-2 = {
+    node-group-02 = {
       min_size     = 1
       max_size     = 10
-      desired_size = 2
+      desired_size = 3
 
       instance_types = ["t3.large"]
       capacity_type  = "SPOT"
@@ -76,3 +76,48 @@ module "eks" {
   }
 }
 
+#creating namespaces
+resource "kubernetes_namespace" "gateway" {
+  metadata {
+    annotations = {
+      name = "gateway"
+    }
+
+    labels = {
+      app = "webapp"
+    }
+
+    name = "gateway"
+  }
+}
+
+
+resource "kubernetes_namespace" "directory" {
+  metadata {
+    annotations = {
+      name = "directory"
+    }
+
+    labels = {
+      app = "webapp"
+    }
+
+    name = "directory"
+  }
+}
+
+
+
+resource "kubernetes_namespace" "analytics" {
+  metadata {
+    annotations = {
+      name = "analytics"
+    }
+
+    labels = {
+      app = "webapp"
+    }
+
+    name = "analytics"
+  }
+}
