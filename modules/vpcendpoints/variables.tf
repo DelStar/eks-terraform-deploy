@@ -1,23 +1,17 @@
 ################################################################################
 # General Variables from root module
 ################################################################################
-
 variable "main-region" {
-  type    = string
-  default = "us-east-1"
-}
-
-variable "env_name" {
-  type    = string
-  default = "Dev"
-}
-
-variable "cluster_name" {
   type = string
 }
 
+variable "env_name" {
+  type = string
+}
+
+
 ################################################################################
-# Variables from other Modules
+# VPC Variables
 ################################################################################
 
 variable "vpc_id" {
@@ -25,7 +19,16 @@ variable "vpc_id" {
   type        = string
 }
 
-variable "oidc_provider_arn" {
-  description = "OIDC Provider ARN used for IRSA "
+variable "private_subnets" {
+  description = "Private subnets to create grafana workspace"
+  type        = list(string)
+}
+
+variable "grafana_security_group_id" {
+  description = "Grafana Security Group ID"
   type        = string
 }
+
+################################################################################
+# Variables from other Modules
+################################################################################
