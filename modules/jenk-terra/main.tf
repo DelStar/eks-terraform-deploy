@@ -76,39 +76,35 @@ resource "aws_iam_policy" "terraform_node_policy" {
           "ec2:Describe*",
           "s3:GetObject",
           "s3:ListBucket",
-          "s3:PutObject",    # Added for saving state
-          "s3:DeleteObject", # Added for state management
+          "s3:PutObject",
+          "s3:DeleteObject",
           "iam:ListRoles",
           "iam:GetRole",
-          "iam:CreateRole", # Added for IAM role creation
-          "iam:TagRole",    # Added for tagging IAM roles
-          "iam:PassRole",   # Added for passing IAM roles
+          "iam:CreateRole",
+          "iam:TagRole",
+          "iam:PassRole",
+          "iam:ListRolePolicies",
+          "iam:ListAttachedRolePolicies",
           "sts:AssumeRole",
-          "dynamodb:GetItem",    # Added for state locking
-          "dynamodb:PutItem",    # Added for state locking
-          "dynamodb:DeleteItem", # Added for releasing lock
-          "ec2:CreateVpc",       # Added for VPC creation
-          "ec2:CreateTags"       # Added for tagging VPC resources
+          "dynamodb:GetItem",
+          "dynamodb:PutItem",
+          "dynamodb:DeleteItem",
+          "ec2:CreateVpc",
+          "ec2:CreateTags",
+          "ec2:CreateSubnet",
+          "ec2:CreateSecurityGroup",
+          "ec2:CreateRouteTable",
+          "ec2:CreateInternetGateway",
+          "ec2:ModifyVpcAttribute",
+          "ec2:RevokeSecurityGroupEgress",
+          "ec2:DeleteNetworkAclEntry"
         ],
         Resource = "*"
-      },
-      {
-        Effect = "Allow",
-        Action = [
-          "ec2:ModifyVpcAttribute" # Added for modifying VPC attributes
-        ],
-        Resource = "*"
-      },
-      {
-        Effect = "Allow",
-        Action = [
-          "iam:ListRolePolicies" # Added for listing IAM role policies
-        ],
-        Resource = "arn:aws:iam::*:role/*"
       }
     ]
   })
 }
+
 
 
 
