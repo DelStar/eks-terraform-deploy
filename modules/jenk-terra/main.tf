@@ -62,31 +62,40 @@ resource "aws_iam_role" "terraform_node_role" {
   })
 }
 
+
 resource "aws_iam_policy" "terraform_node_policy" {
   name        = "terraform-node-policy"
   description = "Policy for Terraform node"
 
   policy = jsonencode({
     Version = "2012-10-17",
-    Statement = [{
-      Effect = "Allow",
-      Action = [
-        "ec2:Describe*",
-        "s3:GetObject",
-        "s3:ListBucket",
-        "iam:ListRoles",
-        "iam:GetRole",
-        "sts:AssumeRole",
-        "dynamodb:GetItem",    # Added for state locking
-        "dynamodb:PutItem",    # Added for state locking
-        "dynamodb:DeleteItem", # Added for releasing lock
-        "iam:CreateRole",      # Added for IAM role creation
-        "ec2:CreateVpc"
-      ],
-      Resource = "*"
-    }]
+    Statement = [
+      {
+        Effect = "Allow",
+        Action = [
+          "ec2:Describe*",
+          "s3:GetObject",
+          "s3:ListBucket",
+          "iam:ListRoles",
+          "iam:GetRole",
+          "sts:AssumeRole",
+          "dynamodb:GetItem",    # Added for state locking
+          "dynamodb:PutItem",    # Added for state locking
+          "dynamodb:DeleteItem", # Added for releasing lock
+          "iam:CreateRole",      # Added for IAM role creation
+          "iam:TagRole",         # Added for tagging IAM roles
+          "iam:PassRole",        # Added for passing IAM roles
+          "ec2:CreateVpc",       # Added for VPC creation
+          "ec2:CreateTags",      # Added for tagging VPC resources
+          "s3:PutObject",        # Added for saving state
+          "s3:DeleteObject"      # Added for state management
+        ],
+        Resource = "*"
+      }
+    ]
   })
 }
+
 
 resource "aws_iam_role_policy_attachment" "terraform_node_policy_attach" {
   role       = aws_iam_role.terraform_node_role.name
