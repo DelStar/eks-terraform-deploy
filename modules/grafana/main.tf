@@ -1,3 +1,24 @@
+# Define local variables
+locals {
+  create_workspace_flag = var.existing_workspace_id == "" ? true : false
+}
+
+# Conditional data source
+data "aws_grafana_workspace" "existing" {
+  count        = var.existing_workspace_id != "" ? 1 : 0
+  workspace_id = var.existing_workspace_id
+}
+
+# Local variables to reference the data source conditionally
+locals {
+  existing_workspace_arn             = local.create_workspace_flag ? null : (length(data.aws_grafana_workspace.existing) > 0 ? data.aws_grafana_workspace.existing[0].arn : null)
+  existing_workspace_endpoint        = local.create_workspace_flag ? null : (length(data.aws_grafana_workspace.existing) > 0 ? data.aws_grafana_workspace.existing[0].endpoint : null)
+  existing_workspace_grafana_version = local.create_workspace_flag ? null : (length(data.aws_grafana_workspace.existing) > 0 ? data.aws_grafana_workspace.existing[0].grafana_version : null)
+  existing_workspace_id              = local.create_workspace_flag ? null : (length(data.aws_grafana_workspace.existing) > 0 ? data.aws_grafana_workspace.existing[0].id : null)
+}
+
+
+
 module "managed_grafana" {
   source = "terraform-aws-modules/managed-service-grafana/aws"
 
@@ -10,7 +31,7 @@ module "managed_grafana" {
   data_sources              = ["CLOUDWATCH", "PROMETHEUS", "XRAY"]
   notification_destinations = ["SNS"]
 
-  create_workspace      = true
+  create_workspace      = local.create_workspace_flag
   create_iam_role       = true
   create_security_group = true
   associate_license     = false
@@ -59,4 +80,8 @@ module "managed_grafana" {
     Terraform   = "true"
     Environment = var.env_name
   }
+
 }
+
+
+
