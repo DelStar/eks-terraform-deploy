@@ -76,25 +76,40 @@ resource "aws_iam_policy" "terraform_node_policy" {
           "ec2:Describe*",
           "s3:GetObject",
           "s3:ListBucket",
+          "s3:PutObject",    # Added for saving state
+          "s3:DeleteObject", # Added for state management
           "iam:ListRoles",
           "iam:GetRole",
+          "iam:CreateRole", # Added for IAM role creation
+          "iam:TagRole",    # Added for tagging IAM roles
+          "iam:PassRole",   # Added for passing IAM roles
           "sts:AssumeRole",
           "dynamodb:GetItem",    # Added for state locking
           "dynamodb:PutItem",    # Added for state locking
           "dynamodb:DeleteItem", # Added for releasing lock
-          "iam:CreateRole",      # Added for IAM role creation
-          "iam:TagRole",         # Added for tagging IAM roles
-          "iam:PassRole",        # Added for passing IAM roles
           "ec2:CreateVpc",       # Added for VPC creation
-          "ec2:CreateTags",      # Added for tagging VPC resources
-          "s3:PutObject",        # Added for saving state
-          "s3:DeleteObject"      # Added for state management
+          "ec2:CreateTags"       # Added for tagging VPC resources
         ],
         Resource = "*"
+      },
+      {
+        Effect = "Allow",
+        Action = [
+          "ec2:ModifyVpcAttribute" # Added for modifying VPC attributes
+        ],
+        Resource = "*"
+      },
+      {
+        Effect = "Allow",
+        Action = [
+          "iam:ListRolePolicies" # Added for listing IAM role policies
+        ],
+        Resource = "arn:aws:iam::*:role/*"
       }
     ]
   })
 }
+
 
 
 resource "aws_iam_role_policy_attachment" "terraform_node_policy_attach" {
