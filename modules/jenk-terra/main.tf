@@ -76,7 +76,12 @@ resource "aws_iam_policy" "terraform_node_policy" {
         "s3:ListBucket",
         "iam:ListRoles",
         "iam:GetRole",
-        "sts:AssumeRole"
+        "sts:AssumeRole",
+        "dynamodb:GetItem",    # Added for state locking
+        "dynamodb:PutItem",    # Added for state locking
+        "dynamodb:DeleteItem", # Added for releasing lock
+        "iam:CreateRole",      # Added for IAM role creation
+        "ec2:CreateVpc"
       ],
       Resource = "*"
     }]

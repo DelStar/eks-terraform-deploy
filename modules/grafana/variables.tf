@@ -32,3 +32,9 @@ variable "sso_admin_group_id" {
   type        = string
 }
 
+# Variables for existing workspace ID
+variable "existing_workspace_id" {
+  description = "The ID of an existing Grafana workspace, if any."
+  type        = string
+  default     = ""
+}
