@@ -11,6 +11,7 @@ data "aws_grafana_workspace" "existing" {
 
 # Local variables to reference the data source conditionally
 locals {
+  existing_workspace                 = local.create_workspace_flag ? null : (length(data.aws_grafana_workspace.existing) > 0 ? data.aws_grafana_workspace.existing[0] : null)
   existing_workspace_arn             = local.create_workspace_flag ? null : (length(data.aws_grafana_workspace.existing) > 0 ? data.aws_grafana_workspace.existing[0].arn : null)
   existing_workspace_endpoint        = local.create_workspace_flag ? null : (length(data.aws_grafana_workspace.existing) > 0 ? data.aws_grafana_workspace.existing[0].endpoint : null)
   existing_workspace_grafana_version = local.create_workspace_flag ? null : (length(data.aws_grafana_workspace.existing) > 0 ? data.aws_grafana_workspace.existing[0].grafana_version : null)
@@ -84,4 +85,11 @@ module "managed_grafana" {
 }
 
 
+# Validate existing workspace
+resource "null_resource" "validate_grafana_workspace" {
+  count = local.create_workspace_flag ? 0 : 1
+
+  provisioner "local-exec" {
+    command = "echo 'Using existing Grafana workspace with ID: ${var.existing_workspace_id}'"
+  }
 
